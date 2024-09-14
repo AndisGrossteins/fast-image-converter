@@ -16,8 +16,8 @@ import { initEmscriptenModule } from '@jsquash/avif/utils.js'
 import { fileToArrayBuffer } from './buffer.js'
 import resvgWasmUrl from '@resvg/resvg-wasm/index_bg.wasm?url';
 import { initWasm as initResvg, Resvg } from '@resvg/resvg-wasm';
-import * as pdfjs from 'pdfjs-dist/build/pdf.js'
-import PDFWorker from 'pdfjs-dist/build/pdf.worker.js?worker'
+import * as pdfjs from 'pdfjs-dist/build/pdf.mjs'
+import PDFWorker from 'pdfjs-dist/build/pdf.worker.mjs?worker'
 import { nanoid } from 'nanoid';
 import { transform } from 'vector-drawable-svg';
 
