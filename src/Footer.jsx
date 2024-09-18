@@ -2,6 +2,17 @@ import { useEffect, useState } from "react";
 
 const timestamp = new Date(BUILD_TIMESTAMP).toUTCString();
 
+/**
+ * The footer of the application.
+ *
+ * It renders a footer with information about the application and its
+ * supported formats. It also includes a button to request permission for
+ * notifications, and displays the current permission status.
+ *
+ * The component will only render if the browser supports the Notification API.
+ *
+ * @returns {JSX.Element} The footer component.
+ */
 export default function Footer() {
 	const [notifiable, setNotifiable] = useState("granted");
 

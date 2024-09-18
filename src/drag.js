@@ -28,6 +28,19 @@ function createSvgFile(svg) {
   });
 }
 
+/**
+ * Creates a file drop handler for a given element. The handler supports
+ * pasting images from the clipboard and dragging/dropping files.
+ *
+ * When a file is dropped/pasted, the `onDrop(files)` callback is called with
+ * an array of File objects.
+ *
+ * The handler adds the following classes to the document body:
+ * - `drag-over` when a file is dragged over the element
+ *
+ * @param {Element} el - the element to add the file drop handler to
+ * @param {function} onDrop - the callback to call when a file is dropped/pasted
+ */
 export function createFileDropHandler(el, onDrop) {
 
   const handleDataTransfer = async (dataTransfer) => {

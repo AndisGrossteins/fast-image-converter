@@ -27,25 +27,44 @@ let emscriptenModuleAVIF;
 let emscriptenModuleAVIF_ENC;
 let emscriptenModuleWEBP;
 
+  /**
+   * Decodes a HEIF/HEIC image.
+   *
+   * @param {ArrayBuffer} buffer The image data to be decoded.
+   * @returns {Promise<ImageData>} A promise resolving to the decoded image data.
+   *
+   * This function uses the wasm-heif library to decode the image. The
+   * library is loaded asynchronously, and once it is loaded, the image is
+   * decoded and the resulting ImageData is returned.
+   */
 async function decode_heif(buffer) {
-
+  // Initialize the wasm-heif library
   const heif_decoder = await (new Promise(r => {
     wasm_heif({
+      // The URL of the wasm file
       locateFile: () => wasm_heif_url,
+      // Don't run the wasm module immediately
       noInitialRun: true,
+      // Once the module is initialized, call this callback
       onRuntimeInitialized() {
         r(this)
       },
     })
   }))
 
+  // Decode the image
   const arrayBuffer = new Uint8Array(buffer);
   const pixels = heif_decoder.decode(arrayBuffer, arrayBuffer.length, false);
+
+  // Get the dimensions of the image
   const { width, height } = heif_decoder.dimensions();
+
+  // Create a new ImageData with the same dimensions
   const imageData = new ImageData(width, height);
+
+  // Copy the decoded pixels to the ImageData
   const data = imageData.data;
   let t = 0;
-
   for (let i = 0; i < data.length; i += 4) {
     data[i] = pixels[t];
     data[i + 1] = pixels[t + 1];
@@ -54,7 +73,10 @@ async function decode_heif(buffer) {
     t += 3;
   }
 
+  // Clean up the wasm module
   heif_decoder.free();
+
+  // Return the decoded image
   return imageData;
 }
 
@@ -125,6 +147,13 @@ async function decode_svg(data, { target }) {
   return imageData;
 }
 
+  /**
+   * Decodes an XML image.
+   *
+   * @param {ArrayBuffer} data The image data to be decoded.
+   * @param {Object} opts The options to be passed to {@link decode_svg}.
+   * @returns {Promise<ImageData>} A promise resolving to the decoded image data.
+   */
 async function decode_xml(data, opts) {
   const textDecoder = new TextDecoder();
   const textEncoder = new TextEncoder();
